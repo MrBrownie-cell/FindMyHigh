@@ -3,136 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kontrollbericht</title>
-  <script>
-    const laeden = [
-      "REWE Anger", "Edeka Bahnhofstraße", "Netto Rieth", "Aldi Moskauer Platz", "Lidl Ilversgehofener Platz",
-      "Kaufland Thüringenpark", "Späti Krämerbrücke", "Norma Krämpfervorstadt", "Tegut Brühl", "Penny Roter Berg",
-      "TrinkGut Brühlervorstadt", "Sparmarkt Andreasstraße", "Getränke Hoffmann Erfurt-Süd", "Tabakbörse Anger",
-      "Aral Tankstelle Rieth", "OMV Tankstelle Nord", "JET Tankstelle Ilversgehofen", "E-Center Linderbach",
-      "Tante-Emma-Laden Domplatz", "Nahkauf Berliner Platz"
-    ];
-
-    const produkte = [
-      "Bier", "Wodka", "Whiskey", "Sekt", "Wein", "Zigaretten", "Vapes", "Snus", "Energy Drinks", "Hartalkohol"
-    ];
-
-    let beitragsDaten = JSON.parse(localStorage.getItem("beitraege")) || [];
-    let chatNachrichten = JSON.parse(localStorage.getItem("chat")) || [];
-
-    function speichernUndAktualisieren() {
-      localStorage.setItem("beitraege", JSON.stringify(beitragsDaten));
-      renderTabelle();
-    }
-
-    function beitragHinzufuegen() {
-      const laden = document.getElementById("laden-auswahl").value;
-      const produkt = document.getElementById("produkt-auswahl").value;
-      const kontrolliert = document.getElementById("kontrolle-auswahl").value;
-
-      if (!laden || !produkt || !kontrolliert) return;
-
-      beitragsDaten.push({
-        laden, produkt, kontrolliert,
-        skala: Math.floor(Math.random() * 10) + 1
-      });
-
-      speichernUndAktualisieren();
-    }
-
-    function renderTabelle() {
-      const tabelle = document.getElementById("haupttabelle");
-      tabelle.innerHTML = "";
-
-      const gruppiert = {};
-      beitragsDaten.forEach(b => {
-        if (!gruppiert[b.laden]) gruppiert[b.laden] = [];
-        gruppiert[b.laden].push(b);
-      });
-
-      for (const laden in gruppiert) {
-        const zeile = document.createElement("tr");
-        const daten = gruppiert[laden];
-        const kontrolliert = daten.filter(d => d.kontrolliert === "ja").length;
-        const gesamt = daten.length;
-        const quote = Math.round((kontrolliert / gesamt) * 100);
-
-        let spalten = `<td class="ladenname" onclick="kommentareAnzeigen('${laden}')">${laden}</td>
-          <td>${gesamt}</td>
-          <td>${quote}%</td>`;
-
-        produkte.forEach(p => {
-          const beitrag = daten.find(d => d.produkt === p);
-          spalten += `<td>${beitrag ? beitrag.skala + "/10" : "-"}</td>`;
-        });
-
-        zeile.innerHTML = spalten;
-        tabelle.appendChild(zeile);
-      }
-    }
-
-    function kommentarAbsenden() {
-      const kommentarLaden = document.getElementById("kommentar-laden").value;
-      const kommentarProdukt = document.getElementById("kommentar-produkt").value;
-      const kommentarText = document.getElementById("kommentar-text").value;
-      const kommentarKontrolle = document.getElementById("kommentar-kontrolle").value;
-
-      if (!kommentarLaden || !kommentarProdukt || !kommentarText) return;
-
-      beitragsDaten.push({
-        laden: kommentarLaden,
-        produkt: kommentarProdukt,
-        kontrolliert: kommentarKontrolle,
-        kommentar: kommentarText,
-        skala: Math.floor(Math.random() * 10) + 1
-      });
-
-      speichernUndAktualisieren();
-      document.getElementById("kommentar-text").value = "";
-    }
-
-    function kommentareAnzeigen(laden) {
-      const ausgabe = beitragsDaten.filter(b => b.laden === laden && b.kommentar);
-      const fenster = document.getElementById("kommentar-anzeige");
-      fenster.innerHTML = `<h4>Kommentare zu ${laden}</h4>` +
-        ausgabe.map(k => `<div style='margin:6px 0;padding:4px;border-left:2px solid #3b82f6;'>
-          <strong>${k.produkt}</strong> (${k.kontrolliert})<br>${k.kommentar}
-        </div>`).join("");
-    }
-
-    function nachrichtAbsenden() {
-      const eingabe = document.getElementById("chatnachricht").value.trim();
-      if (!eingabe) return;
-      chatNachrichten.push({ text: eingabe });
-      localStorage.setItem("chat", JSON.stringify(chatNachrichten));
-      renderChat();
-      document.getElementById("chatnachricht").value = "";
-    }
-
-    function renderChat() {
-      const chatBox = document.getElementById("chatbox");
-      chatBox.innerHTML = chatNachrichten.map(m => `<div style='margin:2px 0;'>• ${m.text}</div>`).join("");
-    }
-
-    window.onload = () => {
-      renderTabelle();
-      renderChat();
-      const ladenAuswahl = document.getElementById("laden-auswahl");
-      laeden.forEach(l => ladenAuswahl.innerHTML += `<option>${l}</option>`);
-      const produktAuswahl = document.getElementById("produkt-auswahl");
-      produkte.forEach(p => produktAuswahl.innerHTML += `<option>${p}</option>`);
-      const kommentarLaden = document.getElementById("kommentar-laden");
-      const kommentarProdukt = document.getElementById("kommentar-produkt");
-      laeden.forEach(l => kommentarLaden.innerHTML += `<option>${l}</option>`);
-      produkte.forEach(p => kommentarProdukt.innerHTML += `<option>${p}</option>`);
-    }
-  </script>
+  <title>Übersicht</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #0f172a;
-      color: #f8fafc;
+      background-color: #121212;
+      color: #f5f5f5;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
       padding: 2rem;
+    }
+    h1 {
+      text-align: center;
     }
     table {
       width: 100%;
@@ -140,97 +21,180 @@
       margin-bottom: 2rem;
     }
     th, td {
-      border: 1px solid #334155;
+      border: 1px solid #444;
       padding: 0.5rem;
       text-align: center;
     }
     th {
-      background-color: #1e293b;
+      background-color: #1e1e1e;
     }
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
+    tr:hover {
+      background-color: #222;
+      cursor: pointer;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .controls select, .controls input {
+      padding: 0.5rem;
+      border-radius: 5px;
       border: none;
+    }
+    .controls button {
       padding: 0.5rem 1rem;
-      margin-top: 1rem;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-    .btn-secondary {
-      background: #64748b;
-      color: white;
+      border-radius: 5px;
       border: none;
-      padding: 0.4rem 1rem;
-      margin-left: 0.5rem;
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+      color: white;
       cursor: pointer;
-      border-radius: 6px;
     }
-    select, textarea {
-      margin-top: 0.5rem;
-      padding: 0.4rem;
-      width: 100%;
+    .controls button.add {
+      background: #2e8b57;
     }
-    #kommentar-anzeige {
+    .controls button:hover {
+      opacity: 0.9;
+    }
+    .comment-section, .chat-section {
       margin-top: 2rem;
-      background: #1e293b;
-      padding: 1rem;
-      border-radius: 6px;
     }
-    #chatfenster {
-      margin-top: 3rem;
-      background: #1e293b;
+    .chat-box, .comment-box {
+      width: 100%;
+      height: 150px;
+      background: #1e1e1e;
+      border-radius: 8px;
       padding: 1rem;
-      border-radius: 6px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: none;
+      resize: vertical;
+    }
+    .send-button {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      border: none;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <h1>Kontrollberichte</h1>
-  <table>
+  <h1>Verkaufsstellen-Kontrolle</h1>
+
+  <div class="controls">
+    <select id="laden">
+      <option value="">Laden auswählen</option>
+    </select>
+    <button onclick="ladenHinzufuegen()">Laden hinzufügen</button>
+
+    <select id="artikel">
+      <option value="">Produkt auswählen</option>
+    </select>
+    <button onclick="artikelHinzufuegen()">Produkt hinzufügen</button>
+
+    <select id="kontrolle">
+      <option value="">Kontrolliert?</option>
+      <option value="Ja">Ja</option>
+      <option value="Nein">Nein</option>
+    </select>
+    <button onclick="beitragHinzufuegen()">Beitrag speichern</button>
+  </div>
+
+  <table id="haupttabelle">
     <thead>
       <tr>
-        <th>Laden</th>
-        <th>Anzahl Beiträge</th>
-        <th>Kontrollquote</th>
-        <th colspan="10">Artikel (Skala 1–10)</th>
+        <th rowspan="2">Laden</th>
+        <th rowspan="2">Anzahl Beiträge</th>
+        <th rowspan="2">% Kontrolle</th>
+        <th colspan="10">Skala (1–10)</th>
+      </tr>
+      <tr>
+        <th>Alkohol (stark)</th>
+        <th>Alkohol (leicht)</th>
+        <th>Zigaretten</th>
+        <th>Vapes</th>
+        <th>Snus</th>
+        <th>Shisha</th>
+        <th>CBD</th>
+        <th>Longpapers</th>
+        <th>Feuerzeuge</th>
+        <th>Energydrinks</th>
       </tr>
     </thead>
-    <tbody id="haupttabelle"></tbody>
+    <tbody></tbody>
   </table>
-  <div>
-    <h3>Neuen Beitrag hinzufügen</h3>
-    <select id="laden-auswahl"><option disabled selected>Laden wählen</option></select>
-    <button class="btn-secondary" onclick="window.prompt('Neuen Laden eingeben:')">Laden hinzufügen</button>
-    <select id="produkt-auswahl"><option disabled selected>Artikel wählen</option></select>
-    <button class="btn-secondary" onclick="window.prompt('Neues Produkt eingeben:')">Produkt hinzufügen</button>
-    <select id="kontrolle-auswahl">
-      <option disabled selected>Kontrolliert?</option>
-      <option value="ja">Ja</option>
-      <option value="nein">Nein</option>
+
+  <div class="comment-section">
+    <h2>Kommentare</h2>
+    <div class="comment-box" id="kommentare"></div>
+    <select id="kom-laden">
+      <option value="">Laden wählen</option>
     </select>
-    <button class="btn-primary" onclick="beitragHinzufuegen()">Beitrag speichern</button>
-  </div>
-
-  <div style="margin-top:2rem;">
-    <h3>Kommentar schreiben</h3>
-    <select id="kommentar-laden"><option disabled selected>Laden wählen</option></select>
-    <select id="kommentar-produkt"><option disabled selected>Artikel wählen</option></select>
-    <select id="kommentar-kontrolle">
-      <option disabled selected>Kontrolliert?</option>
-      <option value="ja">Ja</option>
-      <option value="nein">Nein</option>
+    <select id="kom-artikel">
+      <option value="">Artikel wählen</option>
     </select>
-    <textarea id="kommentar-text" placeholder="Kommentar..." rows="3"></textarea>
-    <button class="btn-primary" onclick="kommentarAbsenden()">Kommentar absenden</button>
+    <select id="kom-kontrolle">
+      <option value="">Kontrolliert?</option>
+      <option value="Ja">Ja</option>
+      <option value="Nein">Nein</option>
+    </select>
+    <textarea id="kom-text" placeholder="Kommentar schreiben..."></textarea>
+    <button class="send-button" onclick="kommentarSenden()">Kommentar abschicken</button>
   </div>
 
-  <div id="kommentar-anzeige"></div>
-
-  <div id="chatfenster">
-    <h3>Live Chat</h3>
-    <div id="chatbox" style="max-height:150px;overflow-y:auto;margin-bottom:0.5rem;"></div>
-    <input type="text" id="chatnachricht" placeholder="Nachricht eingeben" style="width:100%;padding:0.5rem;">
-    <button class="btn-primary" onclick="nachrichtAbsenden()">Senden</button>
+  <div class="chat-section">
+    <h2>Live-Chat</h2>
+    <div class="chat-box" id="chatbox"></div>
+    <textarea id="chattext" placeholder="Nachricht eingeben..."></textarea>
+    <button class="send-button" onclick="chatSenden()">Senden</button>
   </div>
+
+  <script>
+    // Dummy-Implementierungen zum Platzhalten
+    const läden = ['Edeka', 'Rewe', 'Kaufland', 'Lidl', 'Netto', 'Aldi', 'Späti Erfurt', 'Total Tankstelle', 'Aral', 'Penny', 'Nahkauf', 'Real', 'Trinkgut', 'Rossmann', 'dm', 'Norma', 'Getränke Hoffmann', 'Shell', 'Esso', 'Spar'];
+    const artikel = ['Alkohol (stark)', 'Alkohol (leicht)', 'Zigaretten', 'Vapes', 'Snus', 'Shisha', 'CBD', 'Longpapers', 'Feuerzeuge', 'Energydrinks'];
+
+    window.onload = () => {
+      const ladenSelects = document.querySelectorAll('select[id^="laden"], select[id^="kom-laden"]');
+      const artikelSelects = document.querySelectorAll('select[id^="artikel"], select[id^="kom-artikel"]');
+      läden.forEach(l => ladenSelects.forEach(s => s.innerHTML += `<option value="${l}">${l}</option>`));
+      artikel.forEach(a => artikelSelects.forEach(s => s.innerHTML += `<option value="${a}">${a}</option>`));
+    };
+
+    function beitragHinzufuegen() {
+      alert('Beitrag wurde gespeichert. (Demo)');
+    }
+
+    function ladenHinzufuegen() {
+      const neu = prompt('Neuen Laden eingeben:');
+      if (neu) alert(`Laden "${neu}" wurde gespeichert. (Demo)`);
+    }
+
+    function artikelHinzufuegen() {
+      const neu = prompt('Neuen Artikel eingeben:');
+      if (neu) alert(`Artikel "${neu}" wurde gespeichert. (Demo)`);
+    }
+
+    function kommentarSenden() {
+      const text = document.getElementById('kom-text').value;
+      if (text) document.getElementById('kommentare').innerHTML += `<p>${text}</p>`;
+      document.getElementById('kom-text').value = '';
+    }
+
+    function chatSenden() {
+      const text = document.getElementById('chattext').value;
+      if (text) document.getElementById('chatbox').innerHTML += `<p>${text}</p>`;
+      document.getElementById('chattext').value = '';
+    }
+  </script>
 </body>
 </html>
