@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Verifizieren</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     body {
       background-color: #121212;
@@ -40,6 +41,7 @@
       border-radius: 10px;
       cursor: pointer;
       transition: 0.3s;
+      user-select: none;
     }
     .graphic-button:hover {
       background: linear-gradient(135deg, #666, #888);
@@ -48,14 +50,19 @@
       font-size: 0.9rem;
       color: #bbb;
       margin-top: 1rem;
+      white-space: pre-wrap;
     }
   </style>
+  <script>
+    // EmailJS initialisieren mit deinem Public Key
+    emailjs.init('5T8PaFCsFdhDCncMJ');
+  </script>
 </head>
 <body>
   <div class="card">
     <h2>Verifizierung</h2>
-    <p>Gib deine E-Mail oder Telefonnummer ein. Dir wird ein Zugangscode geschickt.</p>
-    <input type="text" id="kontakt" placeholder="E-Mail oder Telefonnummer">
+    <p>Gib deine E-Mail-Adresse ein. Dir wird ein Zugangscode geschickt.</p>
+    <input type="text" id="kontakt" placeholder="E-Mail-Adresse" autocomplete="email" />
     <div class="graphic-button" onclick="senden()">Zugangscode anfordern</div>
     <div class="note" id="ausgabe"></div>
   </div>
@@ -71,20 +78,30 @@
     }
 
     function senden() {
-      const kontakt = document.getElementById('kontakt').value.trim();
-      if (kontakt === '') {
-        document.getElementById('ausgabe').innerText = 'Bitte gib etwas ein.';
+      const email = document.getElementById('kontakt').value.trim();
+      const ausgabe = document.getElementById('ausgabe');
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(email)) {
+        ausgabe.innerText = 'Bitte gib eine gültige E-Mail-Adresse ein.';
         return;
       }
 
       const code = generateCode();
       localStorage.setItem('zugangscode', code);
 
-      document.getElementById('ausgabe').innerText = `Code an ${kontakt} gesendet: \n\n"${code}"\n\n(Der Code funktioniert dauerhaft)`;
+      // Zeit 15 Minuten in der Zukunft berechnen
+      const time = new Date(new Date().getTime() + 15 * 60000).toLocaleTimeString();
 
-      setTimeout(() => {
-        window.location.href = 'code-login.html';
-      }, 5000);
+      emailjs.send('service_aius27c', 'template_b9w8zbe', {
+        to_email: email,
+        passcode: code,
+        time: time
+      }).then(() => {
+        ausgabe.innerText = `Code wurde an ${email} geschickt.`;
+      }, (error) => {
+        ausgabe.innerText = `Fehler beim Senden: ${error.text}`;
+      });
     }
   </script>
 </body>
