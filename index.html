@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zugang 1.1</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #f5f5f5;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .graphic-button {
+      background: linear-gradient(135deg, #333, #555);
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-align: center;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .graphic-button:hover {
+      background: linear-gradient(135deg, #555, #777);
+    }
+
+    .legal-section {
+      margin-top: 4rem;
+      padding: 2rem;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      max-width: 800px;
+    }
+
+    .legal-section h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .legal-section p {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Willkommen bei Zugang 1.1</h1>
+    <p>Diese Plattform dient der anonymen Erfassung von Erfahrungen im Handel.
+    Zugang ist nur nach vorheriger Verifizierung möglich.</p>
+
+    <div class="button-row">
+      <div class="graphic-button" onclick="location.href='verifizieren.html'">
+        Als neuer Nutzer registrieren
+      </div>
+      <div class="graphic-button" onclick="location.href='code-login.html'">
+        Code eingeben / Sign In
+      </div>
+    </div>
+
+    <div class="legal-section">
+      <h2>Rechtlicher Hinweis</h2>
+      <p>Diese Seite richtet sich ausschließlich an verifizierte volljährige Personen.
+        Die Inhalte basieren auf persönlichen Erfahrungsberichten. Es findet keine
+        Aufforderung oder Anleitung zu rechtswidrigem Verhalten statt.</p>
+    </div>
+
+    <footer>
+      Version 1.1 – Stand Juli 2025
+    </footer>
+  </div>
+</body>
+</html>
