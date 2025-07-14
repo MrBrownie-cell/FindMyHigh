@@ -1,360 +1,167 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kontrollberichte - durchrasten.de</title>
-<style>
-  body {
-    background: #121212;
-    color: #f5f5f5;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0; padding: 0 1rem 2rem;
-  }
-  h1 {
-    text-align: center;
-    color: #ADD8E6;
-    margin: 1rem 0 0.5rem;
-  }
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto 1.5rem;
-    background: #1e1e1e;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  thead tr {
-    background: linear-gradient(135deg, #4caf50, #66bb6a);
-    color: #ADD8E6;
-  }
-  th, td {
-    padding: 0.7rem 1rem;
-    border: 1px solid #444;
-    text-align: center;
-    font-size: 0.9rem;
-    user-select: none;
-  }
-  th {
-    font-weight: 700;
-  }
-  .btn {
-    background: linear-gradient(135deg, #4caf50, #66bb6a);
-    border: none;
-    padding: 1rem 1.5rem;
-    border-radius: 16px;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #121212;
-    cursor: pointer;
-    display: block;
-    margin: 0 auto;
-    user-select: none;
-    transition: background 0.3s;
-  }
-  .btn:hover {
-    background: linear-gradient(135deg, #388e3c, #4caf50);
-  }
-  /* Formular Styling */
-  #newEntryForm {
-    max-width: 400px;
-    background: #1e1e1e;
-    margin: 1rem auto 2rem;
-    padding: 1.5rem;
-    border-radius: 12px;
-    display: none;
-    user-select: none;
-  }
-  #newEntryForm label {
-    display: block;
-    margin-bottom: 0.3rem;
-    font-weight: 600;
-  }
-  #newEntryForm select,
-  #newEntryForm input[type="radio"] {
-    margin-bottom: 1rem;
-  }
-  #newEntryForm .radio-group {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 1rem;
-  }
-  #newEntryForm button {
-    width: 100%;
-    background: linear-gradient(135deg, #4caf50, #66bb6a);
-    color: #121212;
-    font-weight: 700;
-    border: none;
-    padding: 0.8rem;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  #newEntryForm button:hover {
-    background: linear-gradient(135deg, #388e3c, #4caf50);
-  }
-  /* Responsive */
-  @media (max-width: 480px) {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
     th, td {
-      font-size: 0.75rem;
-      padding: 0.4rem 0.6rem;
+      border: 1px solid #333;
+      padding: 0.75rem;
+      text-align: center;
     }
-    .btn {
-      font-size: 1rem;
-      padding: 0.8rem 1.2rem;
+    th {
+      background-color: #1e1e1e;
     }
-  }
-</style>
+    tr:nth-child(even) {
+      background-color: #1a1a1a;
+    }
+    .blue-button {
+      background: linear-gradient(135deg, #0044cc, #0066ff);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      margin-top: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .blue-button:hover {
+      background: linear-gradient(135deg, #0066ff, #3388ff);
+    }
+    .input-group {
+      margin-bottom: 1rem;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .input-group input, .input-group select, .input-group textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: none;
+    }
+    .chatbox {
+      margin-top: 3rem;
+      background-color: #1e1e1e;
+      padding: 1rem;
+      border-radius: 12px;
+    }
+    .comment-section {
+      margin-top: 2rem;
+    }
+    .comment {
+      background-color: #1a1a1a;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
 <body>
+  <h1>Erfasste Kontrollen</h1>
 
-<h1>Kontrollberichte der Läden in Erfurt</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Laden</th>
+        <th>Anzahl Beiträge</th>
+        <th>Kontrollquote (%)</th>
+        <th>Skala 1–10</th>
+        <th>Artikel (z. B. Alkohol)</th>
+      </tr>
+    </thead>
+    <tbody id="tabelle">
+      <!-- Dynamisch füllen -->
+    </tbody>
+  </table>
 
-<table id="mainTable">
-  <thead>
-    <tr>
-      <th>Laden</th>
-      <th>Anzahl Beiträge</th>
-      <th>Kontrolliert (%)</th>
-      <th>Skala (1-10)</th>
-      <!-- Artikel-Spalten dynamisch hier -->
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Inhalte per JS -->
-  </tbody>
-</table>
-
-<button class="btn" id="addEntryBtn">Neuen Beitrag hinzufügen</button>
-
-<form id="newEntryForm">
-  <label for="ladenSelect">Laden auswählen:</label>
-  <select id="ladenSelect" required>
-    <option value="">Bitte wählen</option>
-  </select>
-
-  <label for="artikelSelect">Artikel auswählen:</label>
-  <select id="artikelSelect" required>
-    <option value="">Bitte wählen</option>
-  </select>
-
-  <label>Wurde kontrolliert?</label>
-  <div class="radio-group">
-    <label><input type="radio" name="kontrolliert" value="ja" required> Ja</label>
-    <label><input type="radio" name="kontrolliert" value="nein"> Nein</label>
+  <div class="input-group">
+    <label for="laden">Laden auswählen</label>
+    <select id="laden">
+      <option>REWE</option>
+      <option>Edeka</option>
+      <option>Netto</option>
+      <option>Penny</option>
+      <option>Rossmann</option>
+      <option>Aldi</option>
+      <option>dm</option>
+      <option>Kaufland</option>
+      <option>Real</option>
+      <option>Lidl</option>
+      <option>Tegut</option>
+      <option>Globus</option>
+      <option>Getränke Hoffmann</option>
+      <option>Shell</option>
+      <option>Aral</option>
+      <option>Total</option>
+      <option>Esso</option>
+      <option>Norma</option>
+      <option>Multi Markt</option>
+      <option>Marktkauf</option>
+    </select>
+    <button class="blue-button">+ Laden hinzufügen</button>
   </div>
 
-  <button type="submit">Beitrag speichern</button>
-</form>
+  <div class="input-group">
+    <label for="artikel">Artikel auswählen</label>
+    <select id="artikel">
+      <option>Wodka</option>
+      <option>Whisky</option>
+      <option>Zigaretten</option>
+      <option>Vapes</option>
+      <option>Bier</option>
+      <option>Wein</option>
+      <option>Energy Drink</option>
+      <option>Schnaps</option>
+      <option>Tabak</option>
+      <option>Longpapers</option>
+    </select>
+    <button class="blue-button">+ Artikel hinzufügen</button>
+  </div>
 
-<script>
-  // 20 Läden aus Erfurt
-  const laeden = [
-    "Edeka Center Anger 1",
-    "REWE Am Anger",
-    "Kaufland Erfurt",
-    "Netto Marken-Discount",
-    "Penny Markt Erfurt",
-    "Real Erfurt",
-    "Alnatura Erfurt",
-    "Lidl Erfurt",
-    "Nahkauf Erfurt",
-    "Tegut Erfurt",
-    "Sky Markt Erfurt",
-    "Frischeparadies Erfurt",
-    "Bio Company Erfurt",
-    "Norma Erfurt",
-    "Marktkauf Erfurt",
-    "Metro Cash & Carry Erfurt",
-    "Feneberg Erfurt",
-    "HIT Erfurt",
-    "Müller Erfurt",
-    "Globus Erfurt"
-  ];
+  <div class="input-group">
+    <label for="kommentar">Kommentar hinzufügen</label>
+    <textarea id="kommentar" rows="3" placeholder="Was ist passiert?" ></textarea>
+  </div>
+  <div class="input-group">
+    <label for="kontrolle">Wurde kontrolliert?</label>
+    <select id="kontrolle">
+      <option value="ja">Ja</option>
+      <option value="nein">Nein</option>
+    </select>
+  </div>
+  <button class="blue-button">Kommentar speichern</button>
 
-  // Bekannte Artikelarten (Beispiele Minderjährige verboten)
-  const artikel = [
-    "Alkohol",
-    "Zigaretten",
-    "Vapes",
-    "Energy Drinks",
-    "E-Zigaretten",
-    "Tabakwaren",
-    "Spirituosen",
-    "Bier",
-    "Wein",
-    "Schnaps"
-  ];
+  <div class="comment-section">
+    <h3>Kommentare</h3>
+    <div class="comment">REWE – Vapes – Keine Kontrolle – "Hat mir ohne Probleme verkauft"</div>
+    <div class="comment">Shell – Zigaretten – Kontrolle – "Musste Ausweis zeigen"</div>
+  </div>
 
-  // Beiträge Struktur:
-  // {
-  //   laden: string,
-  //   artikel: string,
-  //   kontrolliert: "ja"|"nein"
-  // }
-
-  // --- Initialisierung ---
-
-  const ladenSelect = document.getElementById('ladenSelect');
-  const artikelSelect = document.getElementById('artikelSelect');
-  const newEntryForm = document.getElementById('newEntryForm');
-  const addEntryBtn = document.getElementById('addEntryBtn');
-  const mainTable = document.getElementById('mainTable');
-  const tbody = mainTable.querySelector('tbody');
-
-  // Läden + Artikel in Selects einfügen
-  function populateSelects() {
-    laeden.forEach(l => {
-      const option = document.createElement('option');
-      option.value = l;
-      option.textContent = l;
-      ladenSelect.appendChild(option);
-    });
-
-    artikel.forEach(a => {
-      const option = document.createElement('option');
-      option.value = a;
-      option.textContent = a;
-      artikelSelect.appendChild(option);
-    });
-  }
-
-  populateSelects();
-
-  // Beiträge aus localStorage laden oder leeres Array
-  function loadEntries() {
-    const data = localStorage.getItem('kontrollberichte');
-    return data ? JSON.parse(data) : [];
-  }
-
-  // Beiträge speichern
-  function saveEntries(entries) {
-    localStorage.setItem('kontrollberichte', JSON.stringify(entries));
-  }
-
-  // Tabelle neu aufbauen
-  function renderTable() {
-    const entries = loadEntries();
-
-    // Alle Artikel dynamisch für Tabellenüberschrift ermitteln
-    const uniqueArtikel = [...new Set(entries.map(e => e.artikel))];
-
-    // Kopfzeile - Basis + Artikel als Spalten
-    const theadTr = mainTable.querySelector('thead tr');
-    theadTr.innerHTML = `
-      <th>Laden</th>
-      <th>Anzahl Beiträge</th>
-      <th>Kontrolliert (%)</th>
-      <th>Skala (1-10)</th>
-    `;
-    uniqueArtikel.forEach(a => {
-      const th = document.createElement('th');
-      th.textContent = a;
-      theadTr.appendChild(th);
-    });
-
-    // Körper
-    tbody.innerHTML = '';
-
-    laeden.forEach(laden => {
-      // Filter Beiträge für Laden
-      const ladenEintraege = entries.filter(e => e.laden === laden);
-      const anzahl = ladenEintraege.length;
-
-      if (anzahl === 0) {
-        // Laden ohne Beiträge, Zeile leer außer Ladenname
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${laden}</td>
-          <td>0</td>
-          <td>0%</td>
-          <td>0</td>
-        `;
-        // Leere Zellen für Artikel-Spalten
-        uniqueArtikel.forEach(() => {
-          const td = document.createElement('td');
-          td.textContent = '-';
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-        return;
-      }
-
-      // Kontrolliert ja/nein Anzahl
-      const kontrollJa = ladenEintraege.filter(e => e.kontrolliert === 'ja').length;
-      const kontrolliertProzent = Math.round((kontrollJa / anzahl) * 100);
-
-      // Skala 1-10 Durchschnitt
-      // Wir nehmen als Beispiel: ja = 10, nein = 1 (kann angepasst werden)
-      const skalaSumme = ladenEintraege.reduce((sum, e) => sum + (e.kontrolliert === 'ja' ? 10 : 1), 0);
-      const skalaDurchschnitt = Math.round(skalaSumme / anzahl);
-
-      // Zeile bauen
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${laden}</td>
-        <td>${anzahl}</td>
-        <td>${kontrolliertProzent}%</td>
-        <td>${skalaDurchschnitt}</td>
-      `;
-
-      // Für jede Artikel-Spalte Anzahl Beiträge für den Artikel im Laden
-      uniqueArtikel.forEach(a => {
-        const countArtikel = ladenEintraege.filter(e => e.artikel === a).length;
-        const td = document.createElement('td');
-        td.textContent = countArtikel > 0 ? countArtikel : '-';
-        tr.appendChild(td);
-      });
-
-      tbody.appendChild(tr);
-    });
-  }
-
-  // Formular anzeigen / verstecken
-  addEntryBtn.addEventListener('click', () => {
-    if (newEntryForm.style.display === 'none' || newEntryForm.style.display === '') {
-      newEntryForm.style.display = 'block';
-      addEntryBtn.textContent = 'Formular ausblenden';
-    } else {
-      newEntryForm.style.display = 'none';
-      addEntryBtn.textContent = 'Neuen Beitrag hinzufügen';
-    }
-  });
-
-  // Formular absenden
-  newEntryForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const selectedLaden = ladenSelect.value;
-    const selectedArtikel = artikelSelect.value;
-    const kontrolliertRadio = document.querySelector('input[name="kontrolliert"]:checked');
-    if (!selectedLaden || !selectedArtikel || !kontrolliertRadio) {
-      alert('Bitte alle Felder ausfüllen!');
-      return;
-    }
-
-    const kontrolliertValue = kontrolliertRadio.value;
-
-    // Beitrag anlegen und speichern
-    const entries = loadEntries();
-    entries.push({
-      laden: selectedLaden,
-      artikel: selectedArtikel,
-      kontrolliert: kontrolliertValue
-    });
-    saveEntries(entries);
-
-    // Tabelle neu rendern, Formular ausblenden und reset
-    renderTable();
-    newEntryForm.style.display = 'none';
-    addEntryBtn.textContent = 'Neuen Beitrag hinzufügen';
-    newEntryForm.reset();
-  });
-
-  // Initial laden
-  renderTable();
-</script>
-
+  <div class="chatbox">
+    <h3>Live-Chat</h3>
+    <div style="height: 150px; background: #111; border-radius: 8px; padding: 1rem; overflow-y: auto; color: #ccc;">
+      <p><strong>Merle:</strong> Hat jemand Erfahrung mit Lidl?</p>
+      <p><strong>Du:</strong> Ja, gestern keine Kontrolle.</p>
+    </div>
+    <input type="text" placeholder="Nachricht..." style="margin-top: 1rem; width: 100%; padding: 0.75rem; border-radius: 8px; border: none;" />
+  </div>
 </body>
 </html>
