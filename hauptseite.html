@@ -3,398 +3,198 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Beitragsübersicht</title>
+  <title>Übersicht</title>
   <style>
     body {
-      background: #121212;
+      background-color: #121212;
       color: #f5f5f5;
       font-family: 'Segoe UI', sans-serif;
-      margin: 0; padding: 20px;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 1rem;
+      margin-bottom: 2rem;
     }
     th, td {
-      border: 1px solid #555;
-      padding: 6px;
+      border: 1px solid #444;
+      padding: 0.5rem;
       text-align: center;
     }
     th {
-      background-color: #0a52a0;
+      background-color: #1e1e1e;
     }
-    .category-header {
-      background-color: #0c3f7f;
-      color: white;
-      font-weight: bold;
-    }
-    .btn-primary {
-      background: #0a52a0;
-      color: white;
-      border: none;
-      padding: 10px 14px;
-      margin: 5px 0;
+    tr:hover {
+      background-color: #222;
       cursor: pointer;
-      border-radius: 5px;
     }
-    .btn-secondary {
-      background: #264d7c;
-      color: #ddd;
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .controls select, .controls input {
+      padding: 0.5rem;
+      border-radius: 5px;
       border: none;
-      padding: 8px 12px;
-      margin-left: 5px;
-      cursor: pointer;
-      border-radius: 4px;
     }
-    .input-group {
-      margin-bottom: 12px;
-    }
-    select, input[type=text] {
-      padding: 6px;
+    .controls button {
+      padding: 0.5rem 1rem;
       border-radius: 5px;
-      border: 1px solid #444;
-      background: #222;
+      border: none;
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
       color: white;
-      width: 150px;
+      cursor: pointer;
     }
-    #chat-messages {
+    .controls button.add {
+      background: #2e8b57;
+    }
+    .controls button:hover {
+      opacity: 0.9;
+    }
+    .comment-section, .chat-section {
+      margin-top: 2rem;
+    }
+    .chat-box, .comment-box {
+      width: 100%;
       height: 150px;
-      background: #222;
-      color: white;
-      overflow-y: auto;
-      padding: 8px;
-      margin-top: 15px;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      white-space: pre-wrap;
-    }
-    #chat-input {
-      width: calc(100% - 90px);
-      padding: 8px;
-      border-radius: 5px;
-      border: 1px solid #444;
-      background: #222;
-      color: white;
-      font-size: 1rem;
-    }
-    #chat-send-btn {
-      width: 70px;
-      background: #0a52a0;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    #comments {
-      margin-top: 20px;
-      max-height: 200px;
-      overflow-y: auto;
       background: #1e1e1e;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 0.9rem;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-y: auto;
+      margin-bottom: 1rem;
     }
-    .comment-item {
-      border-bottom: 1px solid #444;
-      padding: 6px 0;
+    textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: none;
+      resize: vertical;
     }
-    .comment-meta {
-      font-size: 0.8rem;
-      color: #aaa;
+    .send-button {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      border: none;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <h1>Verkaufsstellen-Kontrolle</h1>
 
-  <h1>Beitragsübersicht</h1>
+  <div class="controls">
+    <select id="laden">
+      <option value="">Laden auswählen</option>
+    </select>
+    <button onclick="ladenHinzufuegen()">Laden hinzufügen</button>
 
-  <table id="beitrag-tabelle">
+    <select id="artikel">
+      <option value="">Produkt auswählen</option>
+    </select>
+    <button onclick="artikelHinzufuegen()">Produkt hinzufügen</button>
+
+    <select id="kontrolle">
+      <option value="">Kontrolliert?</option>
+      <option value="Ja">Ja</option>
+      <option value="Nein">Nein</option>
+    </select>
+    <button onclick="beitragHinzufuegen()">Beitrag speichern</button>
+  </div>
+
+  <table id="haupttabelle">
     <thead>
       <tr>
-        <th>Laden</th>
-        <th>Anzahl Beiträge</th>
-        <th>Kontrollquote (%)</th>
-        <th colspan="10" class="category-header">Alkohol stark (Skala 1-10)</th>
-        <th colspan="10" class="category-header">Alkohol leicht (Skala 1-10)</th>
-        <th colspan="10" class="category-header">Tabak (Skala 1-10)</th>
-        <th colspan="10" class="category-header">Dampf (Skala 1-10)</th>
+        <th rowspan="2">Laden</th>
+        <th rowspan="2">Anzahl Beiträge</th>
+        <th rowspan="2">% Kontrolle</th>
+        <th colspan="10">Skala (1–10)</th>
       </tr>
       <tr>
-        <th></th><th></th><th></th>
-        <!-- Zahlen 1-10 für jede Kategorie -->
-        ${[...Array(10)].map((_,i) => `<th>${i+1}</th>`).join('')}
-        ${[...Array(10)].map((_,i) => `<th>${i+1}</th>`).join('')}
-        ${[...Array(10)].map((_,i) => `<th>${i+1}</th>`).join('')}
-        ${[...Array(10)].map((_,i) => `<th>${i+1}</th>`).join('')}
+        <th>Alkohol (stark)</th>
+        <th>Alkohol (leicht)</th>
+        <th>Zigaretten</th>
+        <th>Vapes</th>
+        <th>Snus</th>
+        <th>Shisha</th>
+        <th>CBD</th>
+        <th>Longpapers</th>
+        <th>Feuerzeuge</th>
+        <th>Energydrinks</th>
       </tr>
     </thead>
-    <tbody id="table-body">
-      <!-- Dynamisch -->
-    </tbody>
+    <tbody></tbody>
   </table>
 
-  <div>
-    <div class="input-group">
-      <select id="laden-select"></select>
-      <button class="btn-secondary" id="add-laden-btn">Laden hinzufügen</button>
-    </div>
-
-    <div class="input-group">
-      <select id="artikel-select"></select>
-      <button class="btn-secondary" id="add-artikel-btn">Artikel hinzufügen</button>
-    </div>
-
-    <div class="input-group">
-      <label><input type="radio" name="kontrolle" value="ja" checked> Kontrolliert: Ja</label>
-      <label><input type="radio" name="kontrolle" value="nein"> Kontrolliert: Nein</label>
-    </div>
-
-    <button class="btn-primary" id="add-beitrag-btn">Beitrag hinzufügen</button>
+  <div class="comment-section">
+    <h2>Kommentare</h2>
+    <div class="comment-box" id="kommentare"></div>
+    <select id="kom-laden">
+      <option value="">Laden wählen</option>
+    </select>
+    <select id="kom-artikel">
+      <option value="">Artikel wählen</option>
+    </select>
+    <select id="kom-kontrolle">
+      <option value="">Kontrolliert?</option>
+      <option value="Ja">Ja</option>
+      <option value="Nein">Nein</option>
+    </select>
+    <textarea id="kom-text" placeholder="Kommentar schreiben..."></textarea>
+    <button class="send-button" onclick="kommentarSenden()">Kommentar abschicken</button>
   </div>
 
-  <h2>Kommentare</h2>
-  <div id="comments">
-    <!-- Kommentare erscheinen hier -->
+  <div class="chat-section">
+    <h2>Live-Chat</h2>
+    <div class="chat-box" id="chatbox"></div>
+    <textarea id="chattext" placeholder="Nachricht eingeben..."></textarea>
+    <button class="send-button" onclick="chatSenden()">Senden</button>
   </div>
 
-  <h2>Chat</h2>
-  <div id="chat-messages"></div>
-  <div style="margin-top:8px;">
-    <input type="text" id="chat-input" placeholder="Nachricht eingeben..."/>
-    <button id="chat-send-btn">Senden</button>
-  </div>
+  <script>
+    // Dummy-Implementierungen zum Platzhalten
+    const läden = ['Edeka', 'Rewe', 'Kaufland', 'Lidl', 'Netto', 'Aldi', 'Späti Erfurt', 'Total Tankstelle', 'Aral', 'Penny', 'Nahkauf', 'Real', 'Trinkgut', 'Rossmann', 'dm', 'Norma', 'Getränke Hoffmann', 'Shell', 'Esso', 'Spar'];
+    const artikel = ['Alkohol (stark)', 'Alkohol (leicht)', 'Zigaretten', 'Vapes', 'Snus', 'Shisha', 'CBD', 'Longpapers', 'Feuerzeuge', 'Energydrinks'];
 
-<script>
-  // Beispiel-Daten:
-  const defaultLaeden = ["Laden A", "Laden B", "Laden C"];
-  const defaultArtikel = ["Alkohol stark", "Alkohol leicht", "Tabak", "Dampf"];
+    window.onload = () => {
+      const ladenSelects = document.querySelectorAll('select[id^="laden"], select[id^="kom-laden"]');
+      const artikelSelects = document.querySelectorAll('select[id^="artikel"], select[id^="kom-artikel"]');
+      läden.forEach(l => ladenSelects.forEach(s => s.innerHTML += `<option value="${l}">${l}</option>`));
+      artikel.forEach(a => artikelSelects.forEach(s => s.innerHTML += `<option value="${a}">${a}</option>`));
+    };
 
-  let laeden = JSON.parse(localStorage.getItem('laeden')) || [...defaultLaeden];
-  let artikel = JSON.parse(localStorage.getItem('artikel')) || [...defaultArtikel];
-  let beitraege = JSON.parse(localStorage.getItem('beitraege')) || [];
-  let kommentare = JSON.parse(localStorage.getItem('kommentare')) || [];
-  let chatNachrichten = JSON.parse(localStorage.getItem('chatNachrichten')) || [];
-
-  // Helfer: Skala-Daten struktur
-  const skalenKategorien = ["Alkohol stark", "Alkohol leicht", "Tabak", "Dampf"];
-
-  function saveAll() {
-    localStorage.setItem('laeden', JSON.stringify(laeden));
-    localStorage.setItem('artikel', JSON.stringify(artikel));
-    localStorage.setItem('beitraege', JSON.stringify(beitraege));
-    localStorage.setItem('kommentare', JSON.stringify(kommentare));
-    localStorage.setItem('chatNachrichten', JSON.stringify(chatNachrichten));
-  }
-
-  // Dropdowns befüllen
-  function populateDropdowns() {
-    const ladenSelect = document.getElementById('laden-select');
-    const artikelSelect = document.getElementById('artikel-select');
-
-    ladenSelect.innerHTML = '';
-    laeden.forEach(laden => {
-      const option = document.createElement('option');
-      option.value = laden;
-      option.textContent = laden;
-      ladenSelect.appendChild(option);
-    });
-
-    artikelSelect.innerHTML = '';
-    artikel.forEach(a => {
-      const option = document.createElement('option');
-      option.value = a;
-      option.textContent = a;
-      artikelSelect.appendChild(option);
-    });
-  }
-
-  // Tabelle rendern
-  function renderTabelle() {
-    const tbody = document.getElementById('table-body');
-    tbody.innerHTML = '';
-
-    laeden.forEach(laden => {
-      // Filter Beiträge für Laden
-      const beitraegeLaden = beitraege.filter(b => b.laden === laden);
-      const anzahl = beitraegeLaden.length;
-
-      // Kontrollquote in %
-      const kontrolliertCount = beitraegeLaden.filter(b => b.kontrolliert === "ja").length;
-      const kontrollquote = anzahl > 0 ? Math.round(kontrolliertCount / anzahl * 100) : 0;
-
-      // Für Skala: 4 Kategorien mit je 10 Spalten - Array mit je 10 Feldern, wie oft Skala eingetragen wurde
-      // Wir zählen pro Kategorie und Skalenwert
-      const skalaData = {};
-      skalenKategorien.forEach(cat => {
-        skalaData[cat] = new Array(10).fill(0);
-      });
-
-      beitraegeLaden.forEach(b => {
-        if (skalenKategorien.includes(b.artikel)) {
-          if (b.skala && b.skala >=1 && b.skala <=10) {
-            skalaData[b.artikel][b.skala - 1]++;
-          }
-        }
-      });
-
-      const tr = document.createElement('tr');
-
-      // Ladenname
-      let td = document.createElement('td');
-      td.textContent = laden;
-      td.style.cursor = 'pointer';
-      td.onclick = () => showKommentare(laden);
-      tr.appendChild(td);
-
-      // Anzahl Beiträge
-      td = document.createElement('td');
-      td.textContent = anzahl;
-      tr.appendChild(td);
-
-      // Kontrollquote
-      td = document.createElement('td');
-      td.textContent = kontrollquote + '%';
-      tr.appendChild(td);
-
-      // Für jede Kategorie 10 Spalten mit Anzahl der Skalenwerte
-      skalenKategorien.forEach(cat => {
-        for(let i=0; i<10; i++) {
-          td = document.createElement('td');
-          td.textContent = skalaData[cat][i] || 0;
-          tr.appendChild(td);
-        }
-      });
-
-      tbody.appendChild(tr);
-    });
-  }
-
-  // Kommentare anzeigen
-  function showKommentare(laden) {
-    const commentsDiv = document.getElementById('comments');
-    commentsDiv.innerHTML = `<h3>Kommentare zu ${laden}</h3>`;
-    const filtered = kommentare.filter(c => c.laden === laden);
-    if (filtered.length === 0) {
-      commentsDiv.innerHTML += '<p>Keine Kommentare für diesen Laden.</p>';
-      return;
-    }
-    filtered.forEach(c => {
-      const div = document.createElement('div');
-      div.className = 'comment-item';
-      div.innerHTML = `<div>${c.text}</div><div class="comment-meta">Laden: ${c.laden} | Artikel: ${c.artikel} | Kontrolle: ${c.kontrolliert}</div>`;
-      commentsDiv.appendChild(div);
-    });
-  }
-
-  // Beitrag hinzufügen
-  document.getElementById('add-beitrag-btn').onclick = () => {
-    const laden = document.getElementById('laden-select').value;
-    const artikelVal = document.getElementById('artikel-select').value;
-    const kontrolliert = document.querySelector('input[name="kontrolle"]:checked').value;
-
-    // Skala für Artikel anfragen, nur wenn relevant (Alkohol stark/leicht, Tabak, Dampf)
-    let skala = null;
-    if (skalenKategorien.includes(artikelVal)) {
-      skala = prompt(`Gib eine Skala von 1 bis 10 für "${artikelVal}" an:`,"5");
-      skala = parseInt(skala);
-      if(isNaN(skala) || skala < 1 || skala > 10) {
-        alert('Ungültige Skala, bitte Zahl zwischen 1 und 10 eingeben.');
-        return;
-      }
+    function beitragHinzufuegen() {
+      alert('Beitrag wurde gespeichert. (Demo)');
     }
 
-    beitraege.push({laden, artikel: artikelVal, kontrolliert, skala});
-    saveAll();
-    renderTabelle();
-    alert('Beitrag hinzugefügt!');
-  };
-
-  // Laden hinzufügen
-  document.getElementById('add-laden-btn').onclick = () => {
-    const neuLaden = prompt('Neuen Laden eingeben:');
-    if (neuLaden && neuLaden.trim() !== '' && !laeden.includes(neuLaden.trim())) {
-      laeden.push(neuLaden.trim());
-      saveAll();
-      populateDropdowns();
-      renderTabelle();
-    } else {
-      alert('Ungültiger oder bereits vorhandener Laden.');
+    function ladenHinzufuegen() {
+      const neu = prompt('Neuen Laden eingeben:');
+      if (neu) alert(`Laden "${neu}" wurde gespeichert. (Demo)`);
     }
-  };
 
-  // Artikel hinzufügen
-  document.getElementById('add-artikel-btn').onclick = () => {
-    const neuArtikel = prompt('Neuen Artikel eingeben:');
-    if (neuArtikel && neuArtikel.trim() !== '' && !artikel.includes(neuArtikel.trim())) {
-      artikel.push(neuArtikel.trim());
-      saveAll();
-      populateDropdowns();
-      renderTabelle();
-    } else {
-      alert('Ungültiger oder bereits vorhandener Artikel.');
+    function artikelHinzufuegen() {
+      const neu = prompt('Neuen Artikel eingeben:');
+      if (neu) alert(`Artikel "${neu}" wurde gespeichert. (Demo)`);
     }
-  };
 
-  // Kommentar hinzufügen beim Klick auf Kommentarbereich (optional: eigenes Eingabefeld integrieren)
-  // Hier Beispiel zum hinzufügen über Prompt
-  document.getElementById('comments').onclick = () => {
-    const laden = prompt('Für welchen Laden möchtest du kommentieren?');
-    if(!laden || !laeden.includes(laden)) {
-      alert('Ungültiger Laden.');
-      return;
+    function kommentarSenden() {
+      const text = document.getElementById('kom-text').value;
+      if (text) document.getElementById('kommentare').innerHTML += `<p>${text}</p>`;
+      document.getElementById('kom-text').value = '';
     }
-    const artikelVal = prompt('Zu welchem Artikel?');
-    if(!artikelVal || !artikel.includes(artikelVal)) {
-      alert('Ungültiger Artikel.');
-      return;
+
+    function chatSenden() {
+      const text = document.getElementById('chattext').value;
+      if (text) document.getElementById('chatbox').innerHTML += `<p>${text}</p>`;
+      document.getElementById('chattext').value = '';
     }
-    const kontrolliert = prompt('Kontrolliert? (ja/nein)').toLowerCase();
-    if(kontrolliert !== 'ja' && kontrolliert !== 'nein') {
-      alert('Bitte "ja" oder "nein" eingeben.');
-      return;
-    }
-    const text = prompt('Dein Kommentar:');
-    if(!text || text.trim() === '') {
-      alert('Kommentar darf nicht leer sein.');
-      return;
-    }
-    kommentare.push({laden, artikel: artikelVal, kontrolliert, text});
-    saveAll();
-    showKommentare(laden);
-  };
-
-  // Chat Funktionen
-  const chatMessagesDiv = document.getElementById('chat-messages');
-  const chatInput = document.getElementById('chat-input');
-  const chatSendBtn = document.getElementById('chat-send-btn');
-
-  function renderChat() {
-    chatMessagesDiv.innerHTML = '';
-    chatNachrichten.forEach(msg => {
-      const div = document.createElement('div');
-      div.textContent = msg;
-      chatMessagesDiv.appendChild(div);
-    });
-    chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
-  }
-
-  chatSendBtn.onclick = () => {
-    const text = chatInput.value.trim();
-    if(text === '') return;
-    chatNachrichten.push(text);
-    saveAll();
-    renderChat();
-    chatInput.value = '';
-  };
-
-  // Init
-  populateDropdowns();
-  renderTabelle();
-  renderChat();
-
-</script>
-
+  </script>
 </body>
 </html>
