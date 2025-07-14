@@ -3,197 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Übersicht</title>
+  <title>Code-Eingabe</title>
   <style>
     body {
       background-color: #121212;
       color: #f5f5f5;
       font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 2rem;
-    }
-    h1 {
-      text-align: center;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 2rem;
-    }
-    th, td {
-      border: 1px solid #444;
-      padding: 0.5rem;
-      text-align: center;
-    }
-    th {
-      background-color: #1e1e1e;
-    }
-    tr:hover {
-      background-color: #222;
-      cursor: pointer;
-    }
-    .controls {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 2rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
-    .controls select, .controls input {
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: none;
+    .card {
+      background-color: #1e1e1e;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
     }
-    .controls button {
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      border: none;
-      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
-      color: white;
-      cursor: pointer;
-    }
-    .controls button.add {
-      background: #2e8b57;
-    }
-    .controls button:hover {
-      opacity: 0.9;
-    }
-    .comment-section, .chat-section {
-      margin-top: 2rem;
-    }
-    .chat-box, .comment-box {
+    input {
       width: 100%;
-      height: 150px;
-      background: #1e1e1e;
+      padding: 10px;
+      margin-top: 1rem;
+      border: none;
       border-radius: 8px;
+      font-size: 1rem;
+      color: #000;
+    }
+    button {
+      margin-top: 1.5rem;
+      background: linear-gradient(135deg, #444, #666);
       padding: 1rem;
-      overflow-y: auto;
-      margin-bottom: 1rem;
-    }
-    textarea {
-      width: 100%;
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: none;
-      resize: vertical;
-    }
-    .send-button {
-      margin-top: 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      border: none;
-      background: #007bff;
-      color: white;
+      border-radius: 10px;
       cursor: pointer;
+      transition: 0.3s;
+      user-select: none;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      width: 100%;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #666, #888);
+    }
+    .note {
+      font-size: 0.9rem;
+      color: #bbb;
+      margin-top: 1rem;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <h1>Verkaufsstellen-Kontrolle</h1>
-
-  <div class="controls">
-    <select id="laden">
-      <option value="">Laden auswählen</option>
-    </select>
-    <button onclick="ladenHinzufuegen()">Laden hinzufügen</button>
-
-    <select id="artikel">
-      <option value="">Produkt auswählen</option>
-    </select>
-    <button onclick="artikelHinzufuegen()">Produkt hinzufügen</button>
-
-    <select id="kontrolle">
-      <option value="">Kontrolliert?</option>
-      <option value="Ja">Ja</option>
-      <option value="Nein">Nein</option>
-    </select>
-    <button onclick="beitragHinzufuegen()">Beitrag speichern</button>
-  </div>
-
-  <table id="haupttabelle">
-    <thead>
-      <tr>
-        <th rowspan="2">Laden</th>
-        <th rowspan="2">Anzahl Beiträge</th>
-        <th rowspan="2">% Kontrolle</th>
-        <th colspan="10">Skala (1–10)</th>
-      </tr>
-      <tr>
-        <th>Alkohol (stark)</th>
-        <th>Alkohol (leicht)</th>
-        <th>Zigaretten</th>
-        <th>Vapes</th>
-        <th>Snus</th>
-        <th>Shisha</th>
-        <th>CBD</th>
-        <th>Longpapers</th>
-        <th>Feuerzeuge</th>
-        <th>Energydrinks</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <div class="comment-section">
-    <h2>Kommentare</h2>
-    <div class="comment-box" id="kommentare"></div>
-    <select id="kom-laden">
-      <option value="">Laden wählen</option>
-    </select>
-    <select id="kom-artikel">
-      <option value="">Artikel wählen</option>
-    </select>
-    <select id="kom-kontrolle">
-      <option value="">Kontrolliert?</option>
-      <option value="Ja">Ja</option>
-      <option value="Nein">Nein</option>
-    </select>
-    <textarea id="kom-text" placeholder="Kommentar schreiben..."></textarea>
-    <button class="send-button" onclick="kommentarSenden()">Kommentar abschicken</button>
-  </div>
-
-  <div class="chat-section">
-    <h2>Live-Chat</h2>
-    <div class="chat-box" id="chatbox"></div>
-    <textarea id="chattext" placeholder="Nachricht eingeben..."></textarea>
-    <button class="send-button" onclick="chatSenden()">Senden</button>
+  <div class="card">
+    <h2>Verifizierung</h2>
+    <p>Bitte gib deinen Zugangscode ein:</p>
+    <input type="text" id="codeInput" placeholder="Zugangscode" autocomplete="off" />
+    <button onclick="codePruefen()">Bestätigen</button>
+    <div class="note" id="ausgabe"></div>
   </div>
 
   <script>
-    // Dummy-Implementierungen zum Platzhalten
-    const läden = ['Edeka', 'Rewe', 'Kaufland', 'Lidl', 'Netto', 'Aldi', 'Späti Erfurt', 'Total Tankstelle', 'Aral', 'Penny', 'Nahkauf', 'Real', 'Trinkgut', 'Rossmann', 'dm', 'Norma', 'Getränke Hoffmann', 'Shell', 'Esso', 'Spar'];
-    const artikel = ['Alkohol (stark)', 'Alkohol (leicht)', 'Zigaretten', 'Vapes', 'Snus', 'Shisha', 'CBD', 'Longpapers', 'Feuerzeuge', 'Energydrinks'];
+    function codePruefen() {
+      const eingegebenerCode = document.getElementById('codeInput').value.trim();
+      const gespeicherterCode = localStorage.getItem('zugangscode');
+      const ausgabe = document.getElementById('ausgabe');
 
-    window.onload = () => {
-      const ladenSelects = document.querySelectorAll('select[id^="laden"], select[id^="kom-laden"]');
-      const artikelSelects = document.querySelectorAll('select[id^="artikel"], select[id^="kom-artikel"]');
-      läden.forEach(l => ladenSelects.forEach(s => s.innerHTML += `<option value="${l}">${l}</option>`));
-      artikel.forEach(a => artikelSelects.forEach(s => s.innerHTML += `<option value="${a}">${a}</option>`));
-    };
+      if (!eingegebenerCode) {
+        ausgabe.innerText = 'Bitte gib den Zugangscode ein.';
+        return;
+      }
 
-    function beitragHinzufuegen() {
-      alert('Beitrag wurde gespeichert. (Demo)');
-    }
-
-    function ladenHinzufuegen() {
-      const neu = prompt('Neuen Laden eingeben:');
-      if (neu) alert(`Laden "${neu}" wurde gespeichert. (Demo)`);
-    }
-
-    function artikelHinzufuegen() {
-      const neu = prompt('Neuen Artikel eingeben:');
-      if (neu) alert(`Artikel "${neu}" wurde gespeichert. (Demo)`);
-    }
-
-    function kommentarSenden() {
-      const text = document.getElementById('kom-text').value;
-      if (text) document.getElementById('kommentare').innerHTML += `<p>${text}</p>`;
-      document.getElementById('kom-text').value = '';
-    }
-
-    function chatSenden() {
-      const text = document.getElementById('chattext').value;
-      if (text) document.getElementById('chatbox').innerHTML += `<p>${text}</p>`;
-      document.getElementById('chattext').value = '';
+      if (eingegebenerCode === gespeicherterCode) {
+        // Erfolgreiche Verifizierung: Weiterleitung zur Tabelle
+        window.location.href = 'dashboard.html'; // Hier deinen Tabellenseiten-Namen anpassen
+      } else {
+        ausgabe.innerText = 'Falscher Zugangscode. Bitte versuche es erneut.';
+      }
     }
   </script>
 </body>
