@@ -1,1 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verifizieren</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #f5f5f5;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background-color: #1e1e1e;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .graphic-button {
+      margin-top: 1.5rem;
+      background: linear-gradient(135deg, #444, #666);
+      padding: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .graphic-button:hover {
+      background: linear-gradient(135deg, #666, #888);
+    }
+    .note {
+      font-size: 0.9rem;
+      color: #bbb;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Verifizierung</h2>
+    <p>Gib deine E-Mail oder Telefonnummer ein. Dir wird ein Zugangscode geschickt.</p>
+    <input type="text" id="kontakt" placeholder="E-Mail oder Telefonnummer">
+    <div class="graphic-button" onclick="senden()">Zugangscode anfordern</div>
+    <div class="note" id="ausgabe"></div>
+  </div>
 
+  <script>
+    function generateCode(length = 10) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    function senden() {
+      const kontakt = document.getElementById('kontakt').value.trim();
+      if (kontakt === '') {
+        document.getElementById('ausgabe').innerText = 'Bitte gib etwas ein.';
+        return;
+      }
+
+      const code = generateCode();
+      localStorage.setItem('zugangscode', code);
+
+      document.getElementById('ausgabe').innerText = `Code an ${kontakt} gesendet: \n\n"${code}"\n\n(Der Code funktioniert dauerhaft)`;
+
+      setTimeout(() => {
+        window.location.href = 'code-login.html';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
