@@ -34,7 +34,7 @@
       border-radius: 8px;
       font-size: 1rem;
     }
-    .graphic-button {
+    .graphic-button, #resend-button {
       margin-top: 1.5rem;
       background: linear-gradient(135deg, #444, #666);
       padding: 1rem;
@@ -42,8 +42,12 @@
       cursor: pointer;
       transition: 0.3s;
       user-select: none;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      width: 100%;
     }
-    .graphic-button:hover {
+    .graphic-button:hover, #resend-button:hover {
       background: linear-gradient(135deg, #666, #888);
     }
     .note {
@@ -54,7 +58,6 @@
     }
   </style>
   <script>
-    // EmailJS initialisieren mit deinem Public Key
     emailjs.init('5T8PaFCsFdhDCncMJ');
   </script>
 </head>
@@ -63,11 +66,14 @@
     <h2>Verifizierung</h2>
     <p>Gib deine E-Mail-Adresse ein. Dir wird ein Zugangscode geschickt.</p>
     <input type="text" id="kontakt" placeholder="E-Mail-Adresse" autocomplete="email" />
-    <div class="graphic-button" onclick="senden()">Zugangscode anfordern</div>
+    <button class="graphic-button" id="send-button" onclick="senden()">Zugangscode anfordern</button>
+    <button class="graphic-button" id="resend-button" style="display:none;" onclick="resenden()">Mail erneut versenden</button>
     <div class="note" id="ausgabe"></div>
   </div>
 
   <script>
+    let lastEmail = null;
+
     function generateCode(length = 10) {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
       let result = '';
@@ -89,18 +95,43 @@
 
       const code = generateCode();
       localStorage.setItem('zugangscode', code);
-
-      // Zeit 15 Minuten in der Zukunft berechnen
-      const time = new Date(new Date().getTime() + 15 * 60000).toLocaleTimeString();
+      lastEmail = email;
+      localStorage.setItem('lastEmail', email);
 
       emailjs.send('service_aius27c', 'template_b9w8zbe', {
         to_email: email,
         passcode: code,
-        time: time
+        time: new Date(new Date().getTime() + 15 * 60000).toLocaleTimeString()
       }).then(() => {
-        ausgabe.innerText = `Code wurde an ${email} geschickt.`;
+        ausgabe.innerText = `Der Zugangscode wurde an ${email} geschickt. Bitte prüfe dein Postfach.`;
+        document.getElementById('send-button').style.display = 'none';
+        document.getElementById('resend-button').style.display = 'block';
+        document.getElementById('kontakt').disabled = true;
       }, (error) => {
         ausgabe.innerText = `Fehler beim Senden: ${error.text}`;
+      });
+    }
+
+    function resenden() {
+      if (!lastEmail) {
+        lastEmail = localStorage.getItem('lastEmail');
+      }
+      if (!lastEmail) {
+        document.getElementById('ausgabe').innerText = 'Keine E-Mail-Adresse zum erneuten Senden gefunden.';
+        return;
+      }
+
+      const code = generateCode();
+      localStorage.setItem('zugangscode', code);
+
+      emailjs.send('service_aius27c', 'template_b9w8zbe', {
+        to_email: lastEmail,
+        passcode: code,
+        time: new Date(new Date().getTime() + 15 * 60000).toLocaleTimeString()
+      }).then(() => {
+        document.getElementById('ausgabe').innerText = `Der Zugangscode wurde erneut an ${lastEmail} geschickt.`;
+      }, (error) => {
+        document.getElementById('ausgabe').innerText = `Fehler beim erneuten Senden: ${error.text}`;
       });
     }
   </script>
